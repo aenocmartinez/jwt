@@ -16,7 +16,7 @@ func NewLoginUseCase() *LoginUseCase {
 
 func (useCase *LoginUseCase) Execute(email, password string) (dto.LoginDTO, error) {
 
-	var loginRepository domain.LoginRepository = dao.NewLoginMySQL()
+	var loginRepository domain.LoginRepository = dao.NewMySQL()
 	var loginDto dto.LoginDTO
 
 	user := domain.FindUserByEmail(loginRepository, email)
@@ -33,7 +33,7 @@ func (useCase *LoginUseCase) Execute(email, password string) (dto.LoginDTO, erro
 		return loginDto, errors.New("contraseña errada")
 	}
 
-	loginDto.Name = user.Email
+	loginDto.Name = user.Name
 	loginDto.Email = user.Email
 
 	return loginDto, nil

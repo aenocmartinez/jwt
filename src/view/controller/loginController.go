@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Loggin(c *gin.Context) {
+func Login(c *gin.Context) {
 	req := request.LoginRequest{}
 	err := c.ShouldBind(&req)
 

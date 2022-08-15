@@ -10,7 +10,7 @@ func main() {
 
 	router := gin.Default()
 
-	router.POST("/pulzo-api-auth/login", controller.Loggin)
+	router.POST("/pulzo-api-auth/login", controller.Login)
 
 	router.Run(":8081")
 
