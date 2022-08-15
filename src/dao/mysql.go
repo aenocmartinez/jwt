@@ -17,9 +17,7 @@ func NewMySQL() *MySQL {
 }
 
 func (lm *MySQL) FindUserByEmail(email string) domain.User {
-	var user domain.User
 	var strQuery bytes.Buffer
-
 	strQuery.WriteString("select id, name, email, password, active from users where email = ?")
 
 	row := lm.db.Connection().QueryRow(strQuery.String(), email)
@@ -30,13 +28,11 @@ func (lm *MySQL) FindUserByEmail(email string) domain.User {
 
 	row.Scan(&id, &name, &email, &password, &active)
 
-	user = domain.User{
+	return domain.User{
 		Id:       id,
 		Name:     name,
 		Email:    email,
 		Password: password,
 		Active:   active,
 	}
-
-	return user
 }
