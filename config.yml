@@ -4,3 +4,5 @@ Database:
   user: root
   pass: Abix.360*
   name: jwt
+secretKey: y9T08aEM%H4d
+issuer: pulzo.com

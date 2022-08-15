@@ -7,7 +7,9 @@ import (
 )
 
 type Config struct {
-	DB Database `yaml:"Database"`
+	DB        Database `yaml:"Database"`
+	SecretKey string   `yaml:"secretKey"`
+	Issuer    string   `yaml:"issuer"`
 }
 
 type Database struct {

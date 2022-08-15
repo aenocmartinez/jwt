@@ -52,3 +52,26 @@ func (lm *MySQL) UpdateToken(idUser int64, token string) bool {
 
 	return success
 }
+
+func (lm *MySQL) FindUserByToken(token string) domain.User {
+	var strQuery bytes.Buffer
+	strQuery.WriteString("select id, name, email, password, active, created_at from users where token = ?")
+
+	row := lm.db.Connection().QueryRow(strQuery.String(), token)
+
+	var id int64
+	var name, password, email string
+	var active bool
+	var createdAt string
+
+	row.Scan(&id, &name, &email, &password, &active, &createdAt)
+
+	return domain.User{
+		Id:        id,
+		Name:      name,
+		Email:     email,
+		Password:  password,
+		Active:    active,
+		CreatedAt: createdAt,
+	}
+}

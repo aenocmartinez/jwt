@@ -11,6 +11,7 @@ func main() {
 	router := gin.Default()
 
 	router.POST("/pulzo-api-auth/login", controller.Login)
+	router.GET("/pulzo-api-auth/logout", controller.Logout)
 
 	router.Run(":8081")
 

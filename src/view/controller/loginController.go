@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"log"
 	"pulzo-login-jwt/src/usecase"
 	"pulzo-login-jwt/src/view/request"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,4 +25,18 @@ func Login(c *gin.Context) {
 	} else {
 		c.JSON(200, gin.H{"login": login})
 	}
+}
+
+func Logout(c *gin.Context) {
+	const BEARER_SCHEMA = "Bearer "
+	authHeader := c.GetHeader("Authorization")
+	tokenString := strings.TrimSpace(authHeader[len(BEARER_SCHEMA):])
+
+	logoutUseCase := usecase.NewLogoutUseCase()
+	err := logoutUseCase.Execute(tokenString)
+	if err != nil {
+		log.Println(err)
+	}
+
+	c.JSON(200, gin.H{"message": "Su sesión ha finalizado"})
 }
