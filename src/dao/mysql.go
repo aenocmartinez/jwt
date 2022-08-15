@@ -2,9 +2,9 @@ package dao
 
 import (
 	"bytes"
+	"fmt"
 	"pulzo-login-jwt/src/domain"
 	"pulzo-login-jwt/src/infraestructure/database"
-	"time"
 )
 
 type MySQL struct {
@@ -26,9 +26,9 @@ func (lm *MySQL) FindUserByEmail(email string) domain.User {
 	var id int64
 	var name, password string
 	var active bool
-	var createdAt *time.Time
+	var createdAt string
 
-	row.Scan(&id, &name, &email, &password, &active, &createdAt)
+	row.Scan(&id, &name, &email, &password, &active, &createdAt)	
 
 	return domain.User{
 		Id:        id,
@@ -36,6 +36,6 @@ func (lm *MySQL) FindUserByEmail(email string) domain.User {
 		Email:     email,
 		Password:  password,
 		Active:    active,
-		CreatedAt: createdAt.Format("2006-01-02"),
+		CreatedAt: createdAt,
 	}
 }
