@@ -4,7 +4,6 @@ import (
 	"errors"
 	"pulzo-login-jwt/src/dao"
 	"pulzo-login-jwt/src/domain"
-	"pulzo-login-jwt/src/usecase/dto"
 )
 
 type LoginUseCase struct {
@@ -14,10 +13,10 @@ func NewLoginUseCase() *LoginUseCase {
 	return &LoginUseCase{}
 }
 
-func (useCase *LoginUseCase) Execute(email, password string) (dto.LoginDTO, error) {
+func (useCase *LoginUseCase) Execute(email, password string) (domain.LoginDTO, error) {
 
 	var loginRepository domain.LoginRepository = dao.NewMySQL()
-	var loginDto dto.LoginDTO
+	var loginDto domain.LoginDTO
 
 	user := domain.FindUserByEmail(loginRepository, email)
 
@@ -35,6 +34,8 @@ func (useCase *LoginUseCase) Execute(email, password string) (dto.LoginDTO, erro
 
 	loginDto.Name = user.Name
 	loginDto.Email = user.Email
+	loginDto.Active = user.Active
+	loginDto.CreatedAt = user.CreatedAt
 
 	return loginDto, nil
 }

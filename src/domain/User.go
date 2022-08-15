@@ -7,6 +7,7 @@ type User struct {
 	Email      string
 	Password   string
 	Active     bool
+	CreatedAt  string
 }
 
 func (user *User) SetRepository(repository LoginRepository) {
