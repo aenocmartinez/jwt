@@ -1,6 +1,6 @@
-package domain
+package usecase
 
-type Login struct {
+type LoginDTO struct {
 	Name      string `json:"name"`
 	Email     string `json:"email"`
 	Active    bool   `json:"active"`
