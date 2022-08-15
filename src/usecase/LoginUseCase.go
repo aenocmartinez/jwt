@@ -13,29 +13,31 @@ func NewLoginUseCase() *LoginUseCase {
 	return &LoginUseCase{}
 }
 
-func (useCase *LoginUseCase) Execute(email, password string) (domain.LoginDTO, error) {
+func (useCase *LoginUseCase) Execute(email, password string) (domain.Login, error) {
 
 	var loginRepository domain.LoginRepository = dao.NewMySQL()
-	var loginDto domain.LoginDTO
+	var login domain.Login
 
 	user := domain.FindUserByEmail(loginRepository, email)
 
 	if !user.Exists() {
-		return loginDto, errors.New("el usuario no existe")
+		return login, errors.New("el usuario no existe")
 	}
 
 	if !user.IsActive() {
-		return loginDto, errors.New("el usuario está inactivo")
+		return login, errors.New("el usuario está inactivo")
 	}
 
 	if user.Password != password {
-		return loginDto, errors.New("contraseña errada")
+		return login, errors.New("contraseña errada")
 	}
 
-	loginDto.Name = user.Name
-	loginDto.Email = user.Email
-	loginDto.Active = user.Active
-	loginDto.CreatedAt = user.CreatedAt
+	user.SetRepository(loginRepository)
+	login.Name = user.Name
+	login.Email = user.Email
+	login.Active = user.Active
+	// login.CreatedAt = user.CreatedAt
+	login.Token = user.GenerateToken()
 
-	return loginDto, nil
+	return login, nil
 }

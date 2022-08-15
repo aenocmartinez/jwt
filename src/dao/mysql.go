@@ -2,7 +2,6 @@ package dao
 
 import (
 	"bytes"
-	"fmt"
 	"pulzo-login-jwt/src/domain"
 	"pulzo-login-jwt/src/infraestructure/database"
 )
@@ -28,7 +27,7 @@ func (lm *MySQL) FindUserByEmail(email string) domain.User {
 	var active bool
 	var createdAt string
 
-	row.Scan(&id, &name, &email, &password, &active, &createdAt)	
+	row.Scan(&id, &name, &email, &password, &active, &createdAt)
 
 	return domain.User{
 		Id:        id,
@@ -38,4 +37,18 @@ func (lm *MySQL) FindUserByEmail(email string) domain.User {
 		Active:    active,
 		CreatedAt: createdAt,
 	}
+}
+
+func (lm *MySQL) UpdateToken(idUser int64, token string) bool {
+	var success bool = true
+	var strQuery bytes.Buffer
+	strQuery.WriteString("update users set token = ? where id = ?")
+
+	_, err := lm.db.Connection().Exec(strQuery.String(), token, idUser)
+	if err != nil {
+		success = false
+		panic(err)
+	}
+
+	return success
 }
