@@ -8,7 +8,7 @@ import (
 )
 
 func Loggin(c *gin.Context) {
-	req := request.LogginRequest{}
+	req := request.LoginRequest{}
 	err := c.ShouldBind(&req)
 
 	if err != nil {
