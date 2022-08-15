@@ -1,6 +1,6 @@
 Database:
-  host: 
-  port: 
-  user: 
-  pass: 
-  name: 
+  host: localhost
+  port: 3306
+  user: root
+  pass: Abix.360*
+  name: pulzo_loggin
