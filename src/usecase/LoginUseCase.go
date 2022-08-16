@@ -4,6 +4,7 @@ import (
 	"errors"
 	"pulzo-login-jwt/src/dao"
 	"pulzo-login-jwt/src/domain"
+	"pulzo-login-jwt/src/infraestructure/bcrypt"
 	"pulzo-login-jwt/src/usecase/dto"
 )
 
@@ -29,7 +30,7 @@ func (useCase *LoginUseCase) Execute(email, password string) (dto.LoginDTO, erro
 		return loginDto, errors.New("el usuario está inactivo")
 	}
 
-	if user.Password != password {
+	if !bcrypt.ComparePassword(user.Password, []byte(password)) {
 		return loginDto, errors.New("contraseña errada")
 	}
 

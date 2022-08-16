@@ -56,5 +56,10 @@ func CreateUser(c *gin.Context) {
 		Email:    req.Email,
 	}
 
-	createUserUseCase.Execute(userDto)
+	err = createUserUseCase.Execute(userDto)
+	if err != nil {
+		c.JSON(400, gin.H{"message": err.Error()})
+	} else {
+		c.JSON(200, gin.H{"message": "success"})
+	}
 }

@@ -76,16 +76,14 @@ func (m *MySQL) FindUserByToken(token string) domain.User {
 	}
 }
 
-func (m *MySQL) CreateUser(user domain.User) bool {
-	var success bool = true
+func (m *MySQL) CreateUser(user domain.User) (bool, error) {
 	var strQuery bytes.Buffer
 	strQuery.WriteString("INSERT INTO users(name, email, password) VALUES (?, ?, ?)")
 
 	_, err := m.db.Connection().Exec(strQuery.String(), user.Name, user.Email, user.Password)
 	if err != nil {
-		success = false
-		panic(err)
+		return false, err
 	}
 
-	return success
+	return true, nil
 }

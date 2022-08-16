@@ -65,6 +65,6 @@ func (user *User) InvalidateToken() {
 	user.repository.UpdateToken(user.Id, "")
 }
 
-func (user *User) Create() bool {
+func (user *User) Create() (bool, error) {
 	return user.repository.CreateUser(*user)
 }

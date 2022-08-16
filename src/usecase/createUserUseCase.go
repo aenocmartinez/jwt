@@ -15,15 +15,24 @@ func NewCreateUserUseCase() *CreateUserUseCase {
 }
 
 func (useCase *CreateUserUseCase) Execute(userDto dto.UserDto) error {
+
 	var repository domain.LoginRepository = dao.NewMySQL()
+
 	user := domain.FindUserByEmail(repository, userDto.Email)
 	if user.Exists() {
 		return errors.New("el usuario ya existe")
 	}
 
+	user.SetRepository(repository)
+
 	user.Name = userDto.Name
 	user.Email = userDto.Email
 	user.Password = bcrypt.HashAndSalt([]byte(userDto.Password))
+
+	_, err := user.Create()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
