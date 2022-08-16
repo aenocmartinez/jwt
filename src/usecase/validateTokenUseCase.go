@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"fmt"
+	"pulzo-login-jwt/src/dao"
+	"pulzo-login-jwt/src/domain"
 	"pulzo-login-jwt/src/infraestructure/config"
 
 	"github.com/dgrijalva/jwt-go"
@@ -19,6 +21,13 @@ func (useCase *ValidateTokenUseCase) Execute(encodedToken string) (bool, error) 
 	config, err := config.Load("config.yml")
 	if err != nil {
 		return false, err
+	}
+
+	var repository domain.LoginRepository = dao.NewMySQL()
+
+	user := domain.FindUserByToken(repository, encodedToken)
+	if !user.Exists() {
+		return false, nil
 	}
 
 	objJwt, err = jwt.Parse(encodedToken, func(token *jwt.Token) (interface{}, error) {

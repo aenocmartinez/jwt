@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"log"
 	"pulzo-login-jwt/src/usecase"
 	"pulzo-login-jwt/src/usecase/dto"
@@ -62,4 +63,24 @@ func CreateUser(c *gin.Context) {
 	} else {
 		c.JSON(200, gin.H{"message": "success"})
 	}
+}
+
+func IsValidToken(c *gin.Context) bool {
+	const BEARER_SCHEMA = "Bearer "
+	authHeader := c.GetHeader("Authorization")
+
+	if len(authHeader) < 8 {
+		fmt.Println("len(BEARER_SCHEMA) ")
+		return false
+	}
+
+	token := strings.TrimSpace(authHeader[len(BEARER_SCHEMA):])
+
+	validateTokeUseCase := usecase.NewValidateTokenUseCase()
+	result, err := validateTokeUseCase.Execute(token)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return result
 }
