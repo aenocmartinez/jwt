@@ -3,6 +3,7 @@ package controller
 import (
 	"log"
 	"pulzo-login-jwt/src/usecase"
+	"pulzo-login-jwt/src/usecase/dto"
 	"pulzo-login-jwt/src/view/request"
 	"strings"
 
@@ -12,7 +13,6 @@ import (
 func Login(c *gin.Context) {
 	req := request.LoginRequest{}
 	err := c.ShouldBind(&req)
-
 	if err != nil {
 		c.JSON(400, gin.H{"message": err.Error()})
 		return
@@ -39,4 +39,22 @@ func Logout(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{"message": "Su sesión ha finalizado"})
+}
+
+func CreateUser(c *gin.Context) {
+	req := request.CreateUserRequest{}
+	err := c.ShouldBind(&req)
+	if err != nil {
+		c.JSON(400, gin.H{"message": err.Error()})
+		return
+	}
+
+	createUserUseCase := usecase.NewCreateUserUseCase()
+	userDto := dto.UserDto{
+		Name:     req.Name,
+		Password: req.Password,
+		Email:    req.Email,
+	}
+
+	createUserUseCase.Execute(userDto)
 }

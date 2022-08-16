@@ -1,9 +1,8 @@
 package domain
 
 import (
-	"time"
-
 	"pulzo-login-jwt/src/infraestructure/config"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -64,4 +63,8 @@ func (user *User) GenerateToken() string {
 
 func (user *User) InvalidateToken() {
 	user.repository.UpdateToken(user.Id, "")
+}
+
+func (user *User) Create() bool {
+	return user.repository.CreateUser(*user)
 }

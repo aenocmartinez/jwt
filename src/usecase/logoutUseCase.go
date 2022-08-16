@@ -16,9 +16,16 @@ func (logoutCase *LogoutUseCase) Execute(encodedToken string) error {
 
 	var repository domain.LoginRepository = dao.NewMySQL()
 
+	user := domain.FindUserByToken(repository, encodedToken)
+	if !user.Exists() {
+		return errors.New("el usuario no existe")
+	}
+	user.SetRepository(repository)
+
 	validateToken := NewValidateTokenUseCase()
 	isValid, err := validateToken.Execute(encodedToken)
 	if err != nil {
+		user.InvalidateToken()
 		return err
 	}
 
@@ -26,12 +33,6 @@ func (logoutCase *LogoutUseCase) Execute(encodedToken string) error {
 		return errors.New("token no válido")
 	}
 
-	user := domain.FindUserByToken(repository, encodedToken)
-	if !user.Exists() {
-		return errors.New("el usuario no existe")
-	}
-
-	user.SetRepository(repository)
 	user.InvalidateToken()
 
 	return nil

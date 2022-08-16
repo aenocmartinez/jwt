@@ -16,11 +16,11 @@ func NewMySQL() *MySQL {
 	}
 }
 
-func (lm *MySQL) FindUserByEmail(email string) domain.User {
+func (m *MySQL) FindUserByEmail(email string) domain.User {
 	var strQuery bytes.Buffer
 	strQuery.WriteString("select id, name, email, password, active, created_at from users where email = ?")
 
-	row := lm.db.Connection().QueryRow(strQuery.String(), email)
+	row := m.db.Connection().QueryRow(strQuery.String(), email)
 
 	var id int64
 	var name, password string
@@ -39,12 +39,12 @@ func (lm *MySQL) FindUserByEmail(email string) domain.User {
 	}
 }
 
-func (lm *MySQL) UpdateToken(idUser int64, token string) bool {
+func (m *MySQL) UpdateToken(idUser int64, token string) bool {
 	var success bool = true
 	var strQuery bytes.Buffer
 	strQuery.WriteString("update users set token = ? where id = ?")
 
-	_, err := lm.db.Connection().Exec(strQuery.String(), token, idUser)
+	_, err := m.db.Connection().Exec(strQuery.String(), token, idUser)
 	if err != nil {
 		success = false
 		panic(err)
@@ -53,11 +53,11 @@ func (lm *MySQL) UpdateToken(idUser int64, token string) bool {
 	return success
 }
 
-func (lm *MySQL) FindUserByToken(token string) domain.User {
+func (m *MySQL) FindUserByToken(token string) domain.User {
 	var strQuery bytes.Buffer
 	strQuery.WriteString("select id, name, email, password, active, created_at from users where token = ?")
 
-	row := lm.db.Connection().QueryRow(strQuery.String(), token)
+	row := m.db.Connection().QueryRow(strQuery.String(), token)
 
 	var id int64
 	var name, password, email string
@@ -74,4 +74,18 @@ func (lm *MySQL) FindUserByToken(token string) domain.User {
 		Active:    active,
 		CreatedAt: createdAt,
 	}
+}
+
+func (m *MySQL) CreateUser(user domain.User) bool {
+	var success bool = true
+	var strQuery bytes.Buffer
+	strQuery.WriteString("INSERT INTO users(name, email, password) VALUES (?, ?, ?)")
+
+	_, err := m.db.Connection().Exec(strQuery.String(), user.Name, user.Email, user.Password)
+	if err != nil {
+		success = false
+		panic(err)
+	}
+
+	return success
 }
